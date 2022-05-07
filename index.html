@@ -1,0 +1,1323 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>Linear Regression</title>
+
+        <link rel="stylesheet" href="css/reveal.css">
+        <link rel="stylesheet" href="css/theme/ntnuerc.css">
+
+        <!-- Theme used for syntax highlighting of code -->
+        <link rel="stylesheet" href="lib/css/zenburn.css">
+        <script src="https://daybrush.com/scenejs/release/latest/dist/scene.min.js"></script>
+		
+        <!-- Printing and PDF exports -->
+        <script>
+            var link = document.createElement( 'link' );
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+            document.getElementsByTagName( 'head' )[0].appendChild( link );
+        </script>
+        <script src="js/ntnu.js"></script>
+    </head>
+    <body>
+        <div class="reveal">
+        <div class="slides">
+            
+<section id="start" data-state="start">
+
+
+<!-- Header -->
+  
+
+<!-- Background -->
+
+
+<!-- Slide -->
+<div class="jb-slide">
+
+<div class="jb-output-code jb-render">
+
+<!-- start embedded style -->
+
+<!-- end embedded style -->
+<div class="jb-output jb-render">
+
+<h1>Linear Regression</h1>
+
+<p>
+      Jacky Baltes<br>
+      National Taiwan Normal University<br>
+      Taipei, Taiwan<br>
+      <a href="mailto:jacky.baltes@ntnu.edu.tw">jacky.baltes@ntnu.edu.tw</a><br>
+</p>
+
+07 May 2022
+</div><!-- end of jb-output jb-render -->
+</div><!-- end of jb-output-code jb-render -->
+
+
+</div>
+<!-- Footer -->
+
+<div class="jb-footer-left plain">
+    <span id="id-f3ef88cd-e37a-4287-8df0-3be487c00b7d" ><span id="id-f3ef88cd-e37a-4287-8df0-3be487c00b7d"><img id="img-id-f3ef88cd-e37a-4287-8df0-3be487c00b7d"     src="assets/images/logo.png"/></span>
+</span>
+
+</div>
+<div class="jb-footer-right plain">
+    <span id="id-c0493410-cae1-4cee-ac63-4971fd2dd5df" ><span id="id-c0493410-cae1-4cee-ac63-4971fd2dd5df"><img id="img-id-c0493410-cae1-4cee-ac63-4971fd2dd5df" width="162" height="138"   src="assets/images/robbi.png"/></span>
+</span>
+
+</div>
+
+<aside class="notes">
+
+</aside>
+
+
+
+</section>
+<section id="slide_00003_frag_00001" data-state="slide_00003_frag_00001">
+
+
+<!-- Header -->
+  
+
+<!-- Background -->
+
+
+<!-- Slide -->
+<div class="jb-slide">
+
+<div class="jb-output-code jb-render">
+
+<!-- start embedded style -->
+
+<!-- end embedded style -->
+<div class="jb-output jb-render">
+
+<h1>Linear Model</h1> 
+
+<div class="jb-text">
+<p> Assume that we are trying to model a linear relationship between some input 
+  variables <emph>X</emph> and an output variable <emph>Y</emph>.
+
+<p>The problem of predicting a numerical value (Y) is called a <b>regression</b>. Since we use a linear
+model, this is called a linear regression problem</p>
+
+<p>The output variable <emph>Y</emph> is a weighted some of the input features <emph>X</emph></p>
+
+\[
+    Y = w_1 X_1 + w_2 X_2 + w_3 X_3 \cdots w_n X_n + c \\
+    Y = \sum_{i=0}^{n} w_{i} X_{i} + c
+\]
+<emph>c</emph> is a constant offset to bias the model
+
+<p>Dealing with the constant is not so nice, since it is a special case. Easier is to add 
+a constant feature \( X_0 = 1\) for all features</p> 
+
+<p>If we interpret features \( X \) and weights \( w \) as vectors, then we can simplify the
+representation as the dot product of the two vectors</p>
+
+\[
+    Y = \vec{w} \cdot \vec{X}
+\]
+
+</div>
+</div><!-- end of jb-output jb-render -->
+</div><!-- end of jb-output-code jb-render -->
+
+
+</div>
+<!-- Footer -->
+
+<div class="jb-footer-left plain">
+    <span id="id-3c1a42a3-11c3-464a-9350-fda0b62a9a55" ><span id="id-3c1a42a3-11c3-464a-9350-fda0b62a9a55"><img id="img-id-3c1a42a3-11c3-464a-9350-fda0b62a9a55"     src="assets/images/logo.png"/></span>
+</span>
+
+</div>
+<div class="jb-footer-right plain">
+    <span id="id-a62ee3ad-0c54-4d4e-83d7-9254bb4c4431" ><span id="id-a62ee3ad-0c54-4d4e-83d7-9254bb4c4431"><img id="img-id-a62ee3ad-0c54-4d4e-83d7-9254bb4c4431" width="162" height="138"   src="assets/images/robbi.png"/></span>
+</span>
+
+</div>
+
+<aside class="notes">
+
+</aside>
+
+
+
+</section>
+<section id="slide_00004_frag_00001" data-state="slide_00004_frag_00001">
+
+
+<!-- Header -->
+  
+
+<!-- Background -->
+
+
+<!-- Slide -->
+<div class="jb-slide">
+
+<div class="jb-output-code jb-render">
+
+<!-- start embedded style -->
+
+<!-- end embedded style -->
+<div class="jb-output jb-render">
+
+<h1>Weights, Features, and the Dot Product</h1>
+
+<div class="jb-text">
+<p>The dot product has a geometric interpretation</p>
+
+<p>
+The dot product \( \vec{A} \cdot \vec{B} \) is the length of the projection of vector \( \vec{A} \) 
+onto vector \( \vec{B} \) of unit length  
+</p>
+</div>
+</div><!-- end of jb-output jb-render -->
+</div><!-- end of jb-output-code jb-render -->
+
+
+</div>
+<!-- Footer -->
+
+<div class="jb-footer-left plain">
+    <span id="id-0f83b41b-9d95-4496-8d98-ded4983d9383" ><span id="id-0f83b41b-9d95-4496-8d98-ded4983d9383"><img id="img-id-0f83b41b-9d95-4496-8d98-ded4983d9383"     src="assets/images/logo.png"/></span>
+</span>
+
+</div>
+<div class="jb-footer-right plain">
+    <span id="id-7bbdc51a-67b5-4cba-bc30-dcc2c0b03455" ><span id="id-7bbdc51a-67b5-4cba-bc30-dcc2c0b03455"><img id="img-id-7bbdc51a-67b5-4cba-bc30-dcc2c0b03455" width="162" height="138"   src="assets/images/robbi.png"/></span>
+</span>
+
+</div>
+
+<aside class="notes">
+
+</aside>
+
+
+
+</section>
+<section id="slide_00005_frag_00001" data-state="slide_00005_frag_00001">
+
+
+<!-- Header -->
+  
+
+<!-- Background -->
+
+
+<!-- Slide -->
+<div class="jb-slide">
+<div class="jb-input jb-render jb-code" style="text-align:center">
+
+<!-- start embedded style -->
+
+<!-- end embedded style -->
+<div class="jb-input-code jb-render">
+<div class="highlight" style="background: #f8f8f8; color:#101010;display=inline-block;"><pre style="line-height: 125%"><span></span>fig <span style="color: #666666">=</span> plt<span style="color: #666666">.</span>figure()
+ax1 <span style="color: #666666">=</span> fig<span style="color: #666666">.</span>add_subplot( <span style="color: #666666">2</span>, <span style="color: #666666">2</span>, <span style="color: #666666">1</span> )
+ax1<span style="color: #666666">.</span>set_aspect(<span style="color: #BA2121">&quot;equal&quot;</span>)
+
+a <span style="color: #666666">=</span> np<span style="color: #666666">.</span>array( [<span style="color: #666666">0.3</span>, <span style="color: #666666">0.4</span>] )
+b_theta <span style="color: #666666">=</span> <span style="color: #666666">30.0/180.0</span> <span style="color: #666666">*</span> math<span style="color: #666666">.</span>pi 
+b <span style="color: #666666">=</span> np<span style="color: #666666">.</span>array( [ math<span style="color: #666666">.</span>cos(b_theta), math<span style="color: #666666">.</span>sin(b_theta)] )
+
+p_d <span style="color: #666666">=</span> a<span style="color: #666666">.</span>dot(b)
+p <span style="color: #666666">=</span> np<span style="color: #666666">.</span>array( [ math<span style="color: #666666">.</span>cos(b_theta) <span style="color: #666666">*</span> p_d, math<span style="color: #666666">.</span>sin(b_theta)<span style="color: #666666">*</span>p_d] )
+
+ax1<span style="color: #666666">.</span>plot( [ <span style="color: #666666">0</span>, a[<span style="color: #666666">0</span>] ], [<span style="color: #666666">0</span>, a[<span style="color: #666666">1</span>]], <span style="color: #BA2121">&#39;r-&#39;</span>, label<span style="color: #666666">=</span><span style="color: #BA2121">&quot;X&quot;</span>)
+ax1<span style="color: #666666">.</span>plot( [ <span style="color: #666666">0</span>, b[<span style="color: #666666">0</span>] ], [<span style="color: #666666">0</span>, b[<span style="color: #666666">1</span>]], <span style="color: #BA2121">&#39;b-&#39;</span>, label<span style="color: #666666">=</span><span style="color: #BA2121">&quot;W&quot;</span>)
+ax1<span style="color: #666666">.</span>set_title( <span style="color: #BA2121">f&quot;X * W = </span><span style="color: #BB6688; font-weight: bold">{</span>p_d<span style="color: #BB6688; font-weight: bold">:</span><span style="color: #BA2121">.2f</span><span style="color: #BB6688; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span> )
+ax1<span style="color: #666666">.</span>plot( [ <span style="color: #666666">0</span>, p[<span style="color: #666666">0</span>] ], [<span style="color: #666666">0</span>, p[<span style="color: #666666">1</span>]], <span style="color: #BA2121">&#39;g--&#39;</span>, label<span style="color: #666666">=</span><span style="color: #BA2121">&quot;b&quot;</span>, linewidth<span style="color: #666666">=3</span>)
+ax1<span style="color: #666666">.</span>plot( [p[<span style="color: #666666">0</span>], a[<span style="color: #666666">0</span>]], [p[<span style="color: #666666">1</span>], a[<span style="color: #666666">1</span>]], <span style="color: #BA2121">&#39;g--&#39;</span>, linewidth<span style="color: #666666">=3</span>)
+
+ax1<span style="color: #666666">.</span>legend()
+
+ax2 <span style="color: #666666">=</span> fig<span style="color: #666666">.</span>add_subplot( <span style="color: #666666">2</span>, <span style="color: #666666">2</span>, <span style="color: #666666">2</span> )
+ax2<span style="color: #666666">.</span>set_aspect(<span style="color: #BA2121">&quot;equal&quot;</span>)
+
+a <span style="color: #666666">=</span> np<span style="color: #666666">.</span>array( [<span style="color: #666666">0.2</span>, <span style="color: #666666">0.5</span>] )
+b_theta <span style="color: #666666">=</span> math<span style="color: #666666">.</span>atan2( a[<span style="color: #666666">1</span>], a[<span style="color: #666666">0</span>] ) <span style="color: #666666">-</span> <span style="color: #666666">90.0/180.0</span> <span style="color: #666666">*</span> math<span style="color: #666666">.</span>pi 
+b <span style="color: #666666">=</span> np<span style="color: #666666">.</span>array( [ math<span style="color: #666666">.</span>cos(b_theta), math<span style="color: #666666">.</span>sin(b_theta)] )
+
+p_d <span style="color: #666666">=</span> a<span style="color: #666666">.</span>dot(b)
+p <span style="color: #666666">=</span> np<span style="color: #666666">.</span>array( [ math<span style="color: #666666">.</span>cos(b_theta) <span style="color: #666666">*</span> p_d, math<span style="color: #666666">.</span>sin(b_theta)<span style="color: #666666">*</span>p_d] )
+
+ax2<span style="color: #666666">.</span>plot( [ <span style="color: #666666">0</span>, a[<span style="color: #666666">0</span>] ], [<span style="color: #666666">0</span>, a[<span style="color: #666666">1</span>]], <span style="color: #BA2121">&#39;r-&#39;</span>, label<span style="color: #666666">=</span><span style="color: #BA2121">&quot;X&quot;</span>)
+ax2<span style="color: #666666">.</span>plot( [ <span style="color: #666666">0</span>, b[<span style="color: #666666">0</span>] ], [<span style="color: #666666">0</span>, b[<span style="color: #666666">1</span>]], <span style="color: #BA2121">&#39;b-&#39;</span>, label<span style="color: #666666">=</span><span style="color: #BA2121">&quot;W&quot;</span>)
+ax2<span style="color: #666666">.</span>set_title( <span style="color: #BA2121">f&quot;X * W = </span><span style="color: #BB6688; font-weight: bold">{</span>p_d<span style="color: #BB6688; font-weight: bold">:</span><span style="color: #BA2121">.2f</span><span style="color: #BB6688; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span> )
+ax2<span style="color: #666666">.</span>plot( [ <span style="color: #666666">0</span>, p[<span style="color: #666666">0</span>] ], [<span style="color: #666666">0</span>, p[<span style="color: #666666">1</span>]], <span style="color: #BA2121">&#39;g--&#39;</span>, label<span style="color: #666666">=</span><span style="color: #BA2121">&quot;b&quot;</span>, linewidth<span style="color: #666666">=3</span>)
+ax2<span style="color: #666666">.</span>plot( [p[<span style="color: #666666">0</span>], a[<span style="color: #666666">0</span>]], [p[<span style="color: #666666">1</span>], a[<span style="color: #666666">1</span>]], <span style="color: #BA2121">&#39;g--&#39;</span>, linewidth<span style="color: #666666">=3</span>)
+
+ax2<span style="color: #666666">.</span>legend()
+
+ax3 <span style="color: #666666">=</span> fig<span style="color: #666666">.</span>add_subplot( <span style="color: #666666">2</span>, <span style="color: #666666">2</span>, <span style="color: #666666">3</span> )
+ax3<span style="color: #666666">.</span>set_aspect(<span style="color: #BA2121">&quot;equal&quot;</span>)
+
+a <span style="color: #666666">=</span> np<span style="color: #666666">.</span>array( [<span style="color: #666666">-0.2</span>, <span style="color: #666666">0.5</span>] )
+b_theta <span style="color: #666666">=</span> math<span style="color: #666666">.</span>atan2( a[<span style="color: #666666">1</span>], a[<span style="color: #666666">0</span>] ) <span style="color: #666666">-</span> <span style="color: #666666">120.0/180.0</span> <span style="color: #666666">*</span> math<span style="color: #666666">.</span>pi 
+b <span style="color: #666666">=</span> np<span style="color: #666666">.</span>array( [ math<span style="color: #666666">.</span>cos(b_theta), math<span style="color: #666666">.</span>sin(b_theta)] )
+
+p_d <span style="color: #666666">=</span> a<span style="color: #666666">.</span>dot(b)
+p <span style="color: #666666">=</span> np<span style="color: #666666">.</span>array( [ math<span style="color: #666666">.</span>cos(b_theta) <span style="color: #666666">*</span> p_d, math<span style="color: #666666">.</span>sin(b_theta)<span style="color: #666666">*</span>p_d] )
+
+ax3<span style="color: #666666">.</span>plot( [ <span style="color: #666666">0</span>, a[<span style="color: #666666">0</span>] ], [<span style="color: #666666">0</span>, a[<span style="color: #666666">1</span>]], <span style="color: #BA2121">&#39;r-&#39;</span>, label<span style="color: #666666">=</span><span style="color: #BA2121">&quot;X&quot;</span>)
+ax3<span style="color: #666666">.</span>plot( [ <span style="color: #666666">0</span>, b[<span style="color: #666666">0</span>] ], [<span style="color: #666666">0</span>, b[<span style="color: #666666">1</span>]], <span style="color: #BA2121">&#39;b-&#39;</span>, label<span style="color: #666666">=</span><span style="color: #BA2121">&quot;W&quot;</span>)
+ax3<span style="color: #666666">.</span>set_title( <span style="color: #BA2121">f&quot;X * W = </span><span style="color: #BB6688; font-weight: bold">{</span>p_d<span style="color: #BB6688; font-weight: bold">:</span><span style="color: #BA2121">.2f</span><span style="color: #BB6688; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span> )
+ax3<span style="color: #666666">.</span>plot( [ <span style="color: #666666">0</span>, p[<span style="color: #666666">0</span>] ], [<span style="color: #666666">0</span>, p[<span style="color: #666666">1</span>]], <span style="color: #BA2121">&#39;g--&#39;</span>, label<span style="color: #666666">=</span><span style="color: #BA2121">&quot;b&quot;</span>, linewidth<span style="color: #666666">=3</span>)
+ax3<span style="color: #666666">.</span>plot( [p[<span style="color: #666666">0</span>], a[<span style="color: #666666">0</span>]], [p[<span style="color: #666666">1</span>], a[<span style="color: #666666">1</span>]], <span style="color: #BA2121">&#39;g--&#39;</span>, linewidth<span style="color: #666666">=3</span>)
+
+ax3<span style="color: #666666">.</span>legend()
+
+dp1 <span style="color: #666666">=</span> addJBFigure(<span style="color: #BA2121">&quot;dp1&quot;</span>, <span style="color: #666666">0</span>, <span style="color: #666666">0</span>, fig )
+plt<span style="color: #666666">.</span>close()
+</pre></div>
+
+</div><!-- end of jb-input-code jb-render -->
+
+</div>
+
+</div>
+<!-- Footer -->
+
+<div class="jb-footer-left plain">
+    <span id="id-96747668-1781-401d-8660-0fd7aa2472ad" ><span id="id-96747668-1781-401d-8660-0fd7aa2472ad"><img id="img-id-96747668-1781-401d-8660-0fd7aa2472ad"     src="assets/images/logo.png"/></span>
+</span>
+
+</div>
+<div class="jb-footer-right plain">
+    <span id="id-a4b3a6a8-6843-4b58-aa46-eb2cfc33bc50" ><span id="id-a4b3a6a8-6843-4b58-aa46-eb2cfc33bc50"><img id="img-id-a4b3a6a8-6843-4b58-aa46-eb2cfc33bc50" width="162" height="138"   src="assets/images/robbi.png"/></span>
+</span>
+
+</div>
+
+<aside class="notes">
+
+</aside>
+
+
+
+</section>
+<section id="slide_00006_frag_00001" data-state="slide_00006_frag_00001">
+
+
+<!-- Header -->
+  
+
+<!-- Background -->
+
+
+<!-- Slide -->
+<div class="jb-slide">
+
+<div class="jb-output-code jb-render">
+
+<!-- start embedded style -->
+
+<!-- end embedded style -->
+<div class="jb-output jb-render">
+
+<h1>Geometric Interpretation of the Dot Product</h1>
+
+<span id="id-2a6c6afd-e5bf-4f5d-a23f-88160afeb797" ><span id="id-2a6c6afd-e5bf-4f5d-a23f-88160afeb797"><img id="img-id-2a6c6afd-e5bf-4f5d-a23f-88160afeb797"     src="assets/images/dp1.svg"/></span>
+</span>
+</div><!-- end of jb-output jb-render -->
+</div><!-- end of jb-output-code jb-render -->
+
+
+</div>
+<!-- Footer -->
+
+<div class="jb-footer-left plain">
+    <span id="id-6c726b20-cd8a-434e-a378-1f5f11f44871" ><span id="id-6c726b20-cd8a-434e-a378-1f5f11f44871"><img id="img-id-6c726b20-cd8a-434e-a378-1f5f11f44871"     src="assets/images/logo.png"/></span>
+</span>
+
+</div>
+<div class="jb-footer-right plain">
+    <span id="id-878ea31d-5f0f-4956-aa4a-a14540b0caa1" ><span id="id-878ea31d-5f0f-4956-aa4a-a14540b0caa1"><img id="img-id-878ea31d-5f0f-4956-aa4a-a14540b0caa1" width="162" height="138"   src="assets/images/robbi.png"/></span>
+</span>
+
+</div>
+
+<aside class="notes">
+
+</aside>
+
+
+
+</section>
+<section id="slide_00007_frag_00001" data-state="slide_00007_frag_00001">
+
+
+<!-- Header -->
+  
+
+<!-- Background -->
+
+
+<!-- Slide -->
+<div class="jb-slide">
+
+<div class="jb-output-code jb-render">
+
+<!-- start embedded style -->
+
+<!-- end embedded style -->
+<div class="jb-output jb-render">
+
+<h1>Geometric Interpretation of the Dot Product</h1>
+
+<div class="jb-text">
+<p>Using a geometric interpretation, the goal is to find a weight vector such that
+the projection of the inputs \( X \) will match the training data \( Y \)</p>
+<p>Training process should for each training instance \( X_i \):<p>
+<ol>
+<li>If \( w \cdot X_i = Y_i \), then we do <b>not</b> change \( w \)</li>
+<li>If \( w \cdot X_i < Y_i \), then we want to make the angle between \( X \) and \( w \) <b>smaller</b></li>
+<li>If \( w \cdot X_i > Y_i \), then we want to make the angle between \( X \) and \( w \) <b>bigger</b></li>
+</ol>
+
+</div>
+</div><!-- end of jb-output jb-render -->
+</div><!-- end of jb-output-code jb-render -->
+
+
+</div>
+<!-- Footer -->
+
+<div class="jb-footer-left plain">
+    <span id="id-7ef77380-161a-4998-a666-e76f0fbcdfab" ><span id="id-7ef77380-161a-4998-a666-e76f0fbcdfab"><img id="img-id-7ef77380-161a-4998-a666-e76f0fbcdfab"     src="assets/images/logo.png"/></span>
+</span>
+
+</div>
+<div class="jb-footer-right plain">
+    <span id="id-a5b426b6-5006-46e3-ab51-578b0aa0f15e" ><span id="id-a5b426b6-5006-46e3-ab51-578b0aa0f15e"><img id="img-id-a5b426b6-5006-46e3-ab51-578b0aa0f15e" width="162" height="138"   src="assets/images/robbi.png"/></span>
+</span>
+
+</div>
+
+<aside class="notes">
+
+</aside>
+
+
+
+</section>
+<section id="slide_00008_frag_00001" data-state="slide_00008_frag_00001">
+
+
+<!-- Header -->
+  
+
+<!-- Background -->
+
+
+<!-- Slide -->
+<div class="jb-slide">
+
+<div class="jb-output-code jb-render">
+
+<!-- start embedded style -->
+
+<!-- end embedded style -->
+<div class="jb-output jb-render">
+
+<h1>Geometric Interpretation of the Dot Product</h1>
+
+<div class="jb-text">
+<li>If \( w \cdot X_i = Y_i \), then we do <b>not</b> change \( w \)</li>
+<li>If \( w \cdot X_i < Y_i \), then we want to make the angle between \( X \) and \( w \) <b>smaller</b>: 
+Move \( w \) a small step in the direction of \( X \)
+</li>
+
+<li>If \( w \cdot X_i > Y_i \), then we want to make the angle between \( X \) 
+and \( w \) <b>bigger</b>: Move \( w \) a small step in the opposite direction of \( X \)</li>
+</ol>
+
+</div>
+</div><!-- end of jb-output jb-render -->
+</div><!-- end of jb-output-code jb-render -->
+
+
+</div>
+<!-- Footer -->
+
+<div class="jb-footer-left plain">
+    <span id="id-7cf9123d-a68a-4006-bfca-45a75cfeecd7" ><span id="id-7cf9123d-a68a-4006-bfca-45a75cfeecd7"><img id="img-id-7cf9123d-a68a-4006-bfca-45a75cfeecd7"     src="assets/images/logo.png"/></span>
+</span>
+
+</div>
+<div class="jb-footer-right plain">
+    <span id="id-af7d0267-f0ac-4a26-8f55-a645782330f2" ><span id="id-af7d0267-f0ac-4a26-8f55-a645782330f2"><img id="img-id-af7d0267-f0ac-4a26-8f55-a645782330f2" width="162" height="138"   src="assets/images/robbi.png"/></span>
+</span>
+
+</div>
+
+<aside class="notes">
+
+</aside>
+
+
+
+</section>
+<section id="slide_00009_frag_00001" data-state="slide_00009_frag_00001">
+
+
+<!-- Header -->
+  
+
+<!-- Background -->
+
+
+<!-- Slide -->
+<div class="jb-slide">
+<div class="jb-input jb-render jb-code" style="text-align:center">
+
+<!-- start embedded style -->
+
+<!-- end embedded style -->
+<div class="jb-input-code jb-render">
+<div class="highlight" style="background: #f8f8f8; color:#101010;display=inline-block;"><pre style="line-height: 125%"><span></span>random<span style="color: #666666">.</span>seed(<span style="color: #666666">20191202</span>)
+np<span style="color: #666666">.</span>random<span style="color: #666666">.</span>seed(<span style="color: #666666">20191202</span>)
+
+<span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">createSampleData</span>( NModel, Pmin, Pmax, NInstances, sigma ):
+  model <span style="color: #666666">=</span> <span style="color: #666666">-0.5</span> <span style="color: #666666">+</span> np<span style="color: #666666">.</span>random<span style="color: #666666">.</span>random(NModel)
+  x <span style="color: #666666">=</span> Pmin <span style="color: #666666">+</span> np<span style="color: #666666">.</span>random<span style="color: #666666">.</span>random( (NInstances) ) <span style="color: #666666">*</span> (Pmax <span style="color: #666666">-</span> Pmin)
+  x<span style="color: #666666">.</span>sort()
+
+  Xs <span style="color: #666666">=</span> np<span style="color: #666666">.</span>zeros( (NInstances, NModel) )
+  <span style="color: #008000; font-weight: bold">for</span> i <span style="color: #AA22FF; font-weight: bold">in</span> <span style="color: #008000">range</span>(NModel):
+    Xs[:,i] <span style="color: #666666">=</span> x <span style="color: #666666">**</span> i
+  
+  Ys <span style="color: #666666">=</span> Xs<span style="color: #666666">.</span>dot(model)
+  <span style="color: #008000; font-weight: bold">if</span> (sigma <span style="color: #666666">&gt;</span> <span style="color: #666666">0</span>):
+    Ys <span style="color: #666666">=</span> Ys <span style="color: #666666">+</span> np<span style="color: #666666">.</span>random<span style="color: #666666">.</span>normal(<span style="color: #666666">0.0</span>, sigma, NInstances ) 
+  <span style="color: #008000; font-weight: bold">return</span> Xs, Ys, model
+
+<span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">model_to_string</span>( model ):
+  s <span style="color: #666666">=</span> []
+  <span style="color: #008000; font-weight: bold">for</span> i <span style="color: #AA22FF; font-weight: bold">in</span> <span style="color: #008000">range</span>(<span style="color: #008000">len</span>(model) ):
+    <span style="color: #008000; font-weight: bold">if</span> i <span style="color: #666666">==</span> <span style="color: #666666">0</span>:
+      st <span style="color: #666666">=</span> <span style="color: #BA2121">&quot;</span><span style="color: #BB6688; font-weight: bold">{0:.2f}</span><span style="color: #BA2121">&quot;</span><span style="color: #666666">.</span>format(model[i] )
+    <span style="color: #008000; font-weight: bold">elif</span> i <span style="color: #666666">==</span> <span style="color: #666666">1</span>:
+      st <span style="color: #666666">=</span> <span style="color: #BA2121">&quot;</span><span style="color: #BB6688; font-weight: bold">{0:.2f}</span><span style="color: #BA2121">x&quot;</span><span style="color: #666666">.</span>format(model[i])
+    <span style="color: #008000; font-weight: bold">else</span>:
+      st <span style="color: #666666">=</span> <span style="color: #BA2121">&quot;</span><span style="color: #BB6688; font-weight: bold">{0:.2f}</span><span style="color: #BA2121">x^</span><span style="color: #BB6688; font-weight: bold">{1}</span><span style="color: #BA2121">&quot;</span><span style="color: #666666">.</span>format(model[i], i )
+    <span style="color: #008000; font-weight: bold">if</span> ( i <span style="color: #666666">&lt;</span> <span style="color: #008000">len</span>(model) <span style="color: #666666">-</span> <span style="color: #666666">1</span> ) <span style="color: #AA22FF; font-weight: bold">and</span> ( model[i] <span style="color: #666666">&gt;</span> <span style="color: #666666">0</span> ):
+      st <span style="color: #666666">=</span> <span style="color: #BA2121">&quot;+&quot;</span> <span style="color: #666666">+</span> st
+    s<span style="color: #666666">.</span>append( st )
+  <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">&quot; &quot;</span><span style="color: #666666">.</span>join( <span style="color: #008000">reversed</span>( s ) )
+
+NModel <span style="color: #666666">=</span> <span style="color: #666666">4</span>
+Pmin, Pmax <span style="color: #666666">=</span> <span style="color: #666666">-5</span>,<span style="color: #666666">5</span>
+NInstances <span style="color: #666666">=</span> <span style="color: #666666">50</span>
+sigma <span style="color: #666666">=</span> <span style="color: #666666">10</span>
+Xs, Ys, model <span style="color: #666666">=</span> createSampleData( NModel, Pmin, Pmax, NInstances, sigma )
+
+xm <span style="color: #666666">=</span> np<span style="color: #666666">.</span>linspace( Pmin, Pmax, <span style="color: #666666">100</span> )
+xModel <span style="color: #666666">=</span> np<span style="color: #666666">.</span>zeros( (<span style="color: #008000">len</span>(xm), <span style="color: #008000">len</span>(model) ) )
+<span style="color: #008000; font-weight: bold">for</span> i <span style="color: #AA22FF; font-weight: bold">in</span> <span style="color: #008000">range</span>(<span style="color: #008000">len</span>(model)):
+  xModel[:,i] <span style="color: #666666">=</span> xm <span style="color: #666666">**</span> i 
+
+yModel <span style="color: #666666">=</span> xModel<span style="color: #666666">.</span>dot(model)
+
+fig <span style="color: #666666">=</span> plt<span style="color: #666666">.</span>figure()
+ax <span style="color: #666666">=</span> fig<span style="color: #666666">.</span>add_subplot(<span style="color: #666666">1</span>,<span style="color: #666666">1</span>,<span style="color: #666666">1</span>)
+
+ax<span style="color: #666666">.</span>plot( xm, yModel, linewidth<span style="color: #666666">=2</span>, color<span style="color: #666666">=</span><span style="color: #BA2121">&quot;red&quot;</span>, label<span style="color: #666666">=</span><span style="color: #BA2121">&quot;Model&quot;</span> )
+ax<span style="color: #666666">.</span>plot( Xs[:,<span style="color: #666666">1</span>], Ys, <span style="color: #BA2121">&#39;*&#39;</span>, linewidth<span style="color: #666666">=2</span>, color<span style="color: #666666">=</span><span style="color: #BA2121">&quot;blue&quot;</span>, label<span style="color: #666666">=</span><span style="color: #BA2121">&quot;Sampled data&quot;</span>)
+ax<span style="color: #666666">.</span>set_title( model_to_string( model ) )
+lr1 <span style="color: #666666">=</span> addJBFigure(<span style="color: #BA2121">&quot;lr1&quot;</span>, <span style="color: #666666">0</span>, <span style="color: #666666">0</span>, fig )
+plt<span style="color: #666666">.</span>close()
+
+<span style="color: #408080; font-style: italic">#print(Xs, Ys)</span>
+</pre></div>
+
+</div><!-- end of jb-input-code jb-render -->
+
+</div>
+
+</div>
+<!-- Footer -->
+
+<div class="jb-footer-left plain">
+    <span id="id-daad5fe5-2d7c-4f68-9701-c8f78e877f35" ><span id="id-daad5fe5-2d7c-4f68-9701-c8f78e877f35"><img id="img-id-daad5fe5-2d7c-4f68-9701-c8f78e877f35"     src="assets/images/logo.png"/></span>
+</span>
+
+</div>
+<div class="jb-footer-right plain">
+    <span id="id-23fd7990-93d0-4360-9b5a-ac640126fc0d" ><span id="id-23fd7990-93d0-4360-9b5a-ac640126fc0d"><img id="img-id-23fd7990-93d0-4360-9b5a-ac640126fc0d" width="162" height="138"   src="assets/images/robbi.png"/></span>
+</span>
+
+</div>
+
+<aside class="notes">
+
+</aside>
+
+
+
+</section>
+<section id="slide_00010_frag_00001" data-state="slide_00010_frag_00001">
+
+
+<!-- Header -->
+  
+
+<!-- Background -->
+
+
+<!-- Slide -->
+<div class="jb-slide">
+
+<div class="jb-output-code jb-render">
+
+<!-- start embedded style -->
+
+<!-- end embedded style -->
+<div class="jb-output jb-render">
+
+<span id="id-38a49033-90fd-49fc-93fe-d0804716dba9" ><span id="id-38a49033-90fd-49fc-93fe-d0804716dba9"><img id="img-id-38a49033-90fd-49fc-93fe-d0804716dba9"     src="assets/images/lr1.svg"/></span>
+</span>
+</div><!-- end of jb-output jb-render -->
+</div><!-- end of jb-output-code jb-render -->
+
+
+</div>
+<!-- Footer -->
+
+<div class="jb-footer-left plain">
+    <span id="id-8c9b9e92-2712-43ae-b541-1dacb66f9fbf" ><span id="id-8c9b9e92-2712-43ae-b541-1dacb66f9fbf"><img id="img-id-8c9b9e92-2712-43ae-b541-1dacb66f9fbf"     src="assets/images/logo.png"/></span>
+</span>
+
+</div>
+<div class="jb-footer-right plain">
+    <span id="id-91fba596-05f1-454c-a3d9-fad714d1ddb6" ><span id="id-91fba596-05f1-454c-a3d9-fad714d1ddb6"><img id="img-id-91fba596-05f1-454c-a3d9-fad714d1ddb6" width="162" height="138"   src="assets/images/robbi.png"/></span>
+</span>
+
+</div>
+
+<aside class="notes">
+
+</aside>
+
+
+
+</section>
+<section id="slide_00011_frag_00001" data-state="slide_00011_frag_00001">
+
+
+<!-- Header -->
+  
+
+<!-- Background -->
+
+
+<!-- Slide -->
+<div class="jb-slide">
+
+<div class="jb-output-code jb-render">
+
+<!-- start embedded style -->
+
+<!-- end embedded style -->
+<div class="jb-output jb-render">
+
+<h1>Linear Regression</h1>
+
+<div class="jb-text">
+<p>Find the correct weight vector \( w \)</p>
+<p>System of linear equations with 4 unknowns</p>
+<p>But we have more training instances 50</p>
+<p>Pick 4 instances at random</p>
+<p>If there is no noise, this would work</p>
+<p>System is overconstrained and distorted by noise: Solution is not exact.
+Optimization criteria: Least squared error (LSE) approximation</p>
+</p>
+</div>
+</div><!-- end of jb-output jb-render -->
+</div><!-- end of jb-output-code jb-render -->
+
+
+</div>
+<!-- Footer -->
+
+<div class="jb-footer-left plain">
+    <span id="id-5939321f-9d8c-45ad-8d29-8477e56610bb" ><span id="id-5939321f-9d8c-45ad-8d29-8477e56610bb"><img id="img-id-5939321f-9d8c-45ad-8d29-8477e56610bb"     src="assets/images/logo.png"/></span>
+</span>
+
+</div>
+<div class="jb-footer-right plain">
+    <span id="id-87abbda4-fb05-4e75-88d3-045c84fbd5a2" ><span id="id-87abbda4-fb05-4e75-88d3-045c84fbd5a2"><img id="img-id-87abbda4-fb05-4e75-88d3-045c84fbd5a2" width="162" height="138"   src="assets/images/robbi.png"/></span>
+</span>
+
+</div>
+
+<aside class="notes">
+
+</aside>
+
+
+
+</section>
+<section id="slide_00012_frag_00001" data-state="slide_00012_frag_00001">
+
+
+<!-- Header -->
+  
+
+<!-- Background -->
+
+
+<!-- Slide -->
+<div class="jb-slide">
+<div class="jb-input jb-render jb-code" style="text-align:center">
+
+<!-- start embedded style -->
+
+<!-- end embedded style -->
+<div class="jb-input-code jb-render">
+<div class="highlight" style="background: #f8f8f8; color:#101010;display=inline-block;"><pre style="line-height: 125%"><span></span><span style="color: #008000">print</span>( Xs[<span style="color: #666666">0</span>:NModel], Ys[<span style="color: #666666">0</span>:NModel] )
+NModel <span style="color: #666666">=</span> <span style="color: #666666">4</span>
+Pmin, Pmax <span style="color: #666666">=</span> <span style="color: #666666">-5</span>,<span style="color: #666666">5</span>
+NInstances <span style="color: #666666">=</span> <span style="color: #666666">50</span>
+sigma <span style="color: #666666">=</span> <span style="color: #666666">10</span>
+Xs, Ys, model <span style="color: #666666">=</span> createSampleData( NModel, Pmin, Pmax, NInstances, sigma )
+
+xm <span style="color: #666666">=</span> np<span style="color: #666666">.</span>linspace( Pmin, Pmax, <span style="color: #666666">100</span> )
+xModel <span style="color: #666666">=</span> np<span style="color: #666666">.</span>zeros( (<span style="color: #008000">len</span>(xm), <span style="color: #008000">len</span>(model) ) )
+<span style="color: #008000; font-weight: bold">for</span> i <span style="color: #AA22FF; font-weight: bold">in</span> <span style="color: #008000">range</span>(<span style="color: #008000">len</span>(model)):
+  xModel[:,i] <span style="color: #666666">=</span> xm <span style="color: #666666">**</span> i 
+
+yModel <span style="color: #666666">=</span> xModel<span style="color: #666666">.</span>dot(model)
+
+modelD <span style="color: #666666">=</span> np<span style="color: #666666">.</span>linalg<span style="color: #666666">.</span>solve( Xs[<span style="color: #666666">0</span>:NModel], Ys[<span style="color: #666666">0</span>:NModel] )
+<span style="color: #008000">print</span>( modelD )
+
+fig <span style="color: #666666">=</span> plt<span style="color: #666666">.</span>figure()
+ax <span style="color: #666666">=</span> fig<span style="color: #666666">.</span>add_subplot(<span style="color: #666666">1</span>,<span style="color: #666666">1</span>,<span style="color: #666666">1</span>)
+
+ax<span style="color: #666666">.</span>plot( xm, yModel, linewidth<span style="color: #666666">=2</span>, color<span style="color: #666666">=</span><span style="color: #BA2121">&quot;red&quot;</span>, label<span style="color: #666666">=</span><span style="color: #BA2121">&quot;Model&quot;</span> )
+ax<span style="color: #666666">.</span>plot( Xs[:,<span style="color: #666666">1</span>], Ys, <span style="color: #BA2121">&#39;*&#39;</span>, linewidth<span style="color: #666666">=2</span>, color<span style="color: #666666">=</span><span style="color: #BA2121">&quot;blue&quot;</span>, label<span style="color: #666666">=</span><span style="color: #BA2121">&quot;Sampled data&quot;</span>)
+
+yd <span style="color: #666666">=</span> xModel<span style="color: #666666">.</span>dot( modelD )
+ax<span style="color: #666666">.</span>plot( xm, yd, linewidth<span style="color: #666666">=2</span>, color<span style="color: #666666">=</span><span style="color: #BA2121">&quot;green&quot;</span>, label<span style="color: #666666">=</span><span style="color: #BA2121">&quot;Model first </span><span style="color: #BB6688; font-weight: bold">{0}</span><span style="color: #BA2121"> points&quot;</span><span style="color: #666666">.</span>format(NModel) )
+
+lr2 <span style="color: #666666">=</span> addJBFigure(<span style="color: #BA2121">&quot;lr2&quot;</span>, <span style="color: #666666">0</span>, <span style="color: #666666">0</span>, fig )
+plt<span style="color: #666666">.</span>close()
+</pre></div>
+
+</div><!-- end of jb-input-code jb-render -->
+
+</div>
+<div class="jb-print jb-render">
+<div class="jb-output jb-render code" style="text-align:center">
+<div class="jb-stdout code" style="display:inline-block; width:90%">
+<pre >
+[[   1.           -4.87387023   23.75461107 -115.77689181]
+ [   1.           -4.62062624   21.35018688  -98.65123378]
+ [   1.           -4.44377526   19.74713852  -87.75184555]
+ [   1.           -4.06878947   16.55504775  -67.35900395]] [-19.91828386 -19.61005279 -50.38380305 -27.10590056]
+[-5032478.09411507 -3213072.78931621  -683605.80951343   -48465.93890185]
+</pre>
+</div>
+</div>
+
+</div><!-- end of jb-print jb-render -->
+
+</div>
+<!-- Footer -->
+
+<div class="jb-footer-left plain">
+    <span id="id-099f46bd-fba4-46f5-8382-75fc10cef9e3" ><span id="id-099f46bd-fba4-46f5-8382-75fc10cef9e3"><img id="img-id-099f46bd-fba4-46f5-8382-75fc10cef9e3"     src="assets/images/logo.png"/></span>
+</span>
+
+</div>
+<div class="jb-footer-right plain">
+    <span id="id-077c08c8-436e-4002-9cae-c3005aa6d993" ><span id="id-077c08c8-436e-4002-9cae-c3005aa6d993"><img id="img-id-077c08c8-436e-4002-9cae-c3005aa6d993" width="162" height="138"   src="assets/images/robbi.png"/></span>
+</span>
+
+</div>
+
+<aside class="notes">
+
+</aside>
+
+
+
+</section>
+<section id="slide_00013_frag_00001" data-state="slide_00013_frag_00001">
+
+
+<!-- Header -->
+  
+
+<!-- Background -->
+
+
+<!-- Slide -->
+<div class="jb-slide">
+
+<div class="jb-output-code jb-render">
+
+<!-- start embedded style -->
+
+<!-- end embedded style -->
+<div class="jb-output jb-render">
+
+<h1>Picking 4 Instances Gives Bad Result</h1>
+
+<span id="id-724d2c13-8e8d-4cd7-9b4b-07d20b5ef91a" ><span id="id-724d2c13-8e8d-4cd7-9b4b-07d20b5ef91a"><img id="img-id-724d2c13-8e8d-4cd7-9b4b-07d20b5ef91a"     src="assets/images/lr2.svg"/></span>
+</span>
+</div><!-- end of jb-output jb-render -->
+</div><!-- end of jb-output-code jb-render -->
+
+
+</div>
+<!-- Footer -->
+
+<div class="jb-footer-left plain">
+    <span id="id-546ba9c3-cc4a-4c0b-9c0c-9e4899017798" ><span id="id-546ba9c3-cc4a-4c0b-9c0c-9e4899017798"><img id="img-id-546ba9c3-cc4a-4c0b-9c0c-9e4899017798"     src="assets/images/logo.png"/></span>
+</span>
+
+</div>
+<div class="jb-footer-right plain">
+    <span id="id-98ea0170-1ecc-4efa-a8ac-7b5bf99291a0" ><span id="id-98ea0170-1ecc-4efa-a8ac-7b5bf99291a0"><img id="img-id-98ea0170-1ecc-4efa-a8ac-7b5bf99291a0" width="162" height="138"   src="assets/images/robbi.png"/></span>
+</span>
+
+</div>
+
+<aside class="notes">
+
+</aside>
+
+
+
+</section>
+<section id="slide_00014_frag_00001" data-state="slide_00014_frag_00001">
+
+
+<!-- Header -->
+  
+
+<!-- Background -->
+
+
+<!-- Slide -->
+<div class="jb-slide">
+
+<div class="jb-output-code jb-render">
+
+<!-- start embedded style -->
+
+<!-- end embedded style -->
+<div class="jb-output jb-render">
+
+<h1>Moore Penrose Pseudo Inverse Method</h1>
+
+<div class="jb-text">
+<p>To calculat the least squared error approximation for a system of linear equations,
+we can use the Moore Penrose method</p>
+
+<p>Given the system of linear equations</p>
+\[ 
+    X \cdot \vec{w} = \vec{Y}
+\], where \( X \) is a matrix of instances ( size: 50,4 ), \( w \) is the weight vector ( size: 4,1), 
+and \( \vec{Y} \) is the target value (size: 50,1 )
+
+</div>
+</div><!-- end of jb-output jb-render -->
+</div><!-- end of jb-output-code jb-render -->
+
+
+</div>
+<!-- Footer -->
+
+<div class="jb-footer-left plain">
+    <span id="id-a5987db9-a315-4241-b62d-1964bc82d5a2" ><span id="id-a5987db9-a315-4241-b62d-1964bc82d5a2"><img id="img-id-a5987db9-a315-4241-b62d-1964bc82d5a2"     src="assets/images/logo.png"/></span>
+</span>
+
+</div>
+<div class="jb-footer-right plain">
+    <span id="id-bb0c6783-1096-4bf9-a0b4-135cf240cb58" ><span id="id-bb0c6783-1096-4bf9-a0b4-135cf240cb58"><img id="img-id-bb0c6783-1096-4bf9-a0b4-135cf240cb58" width="162" height="138"   src="assets/images/robbi.png"/></span>
+</span>
+
+</div>
+
+<aside class="notes">
+
+</aside>
+
+
+
+</section>
+<section id="slide_00015_frag_00001" data-state="slide_00015_frag_00001">
+
+
+<!-- Header -->
+  
+
+<!-- Background -->
+
+
+<!-- Slide -->
+<div class="jb-slide">
+
+<div class="jb-output-code jb-render">
+
+<!-- start embedded style -->
+
+<!-- end embedded style -->
+<div class="jb-output jb-render">
+
+<h1>Moore Penrose Pseudo Inverse Method</h1>
+
+<div class="jb-text">
+<p>We pre-multiply the equation with \( X^T \), the transpose of \( X \), then solve the
+resulting correctly sized linear system</p>
+<p>The solution of the new linear system is the least squared error solution to the original
+over-constrained system distorted by noise (Normal Equation)</p>
+
+<p>Given the system of linear equations</p>
+\[ 
+    X \cdot \vec{w} = \vec{Y} \Rightarrow\\
+    X^T \cdot X \cdot \vec{w} = X^T \cdot \vec{Y}
+\]
+
+, where \( X \) is a matrix of instances ( size: 50,4 ), \( X^T \) is a matrix of instances ( size: 4,50 ), 
+\( w \) is the weight vector ( size: 4,1), 
+and \( \vec{Y} \) is the target value (size: 50,1 )
+
+</div>
+</div><!-- end of jb-output jb-render -->
+</div><!-- end of jb-output-code jb-render -->
+
+
+</div>
+<!-- Footer -->
+
+<div class="jb-footer-left plain">
+    <span id="id-0589efc0-abb5-40a0-87a6-76f869fb16b3" ><span id="id-0589efc0-abb5-40a0-87a6-76f869fb16b3"><img id="img-id-0589efc0-abb5-40a0-87a6-76f869fb16b3"     src="assets/images/logo.png"/></span>
+</span>
+
+</div>
+<div class="jb-footer-right plain">
+    <span id="id-f66b5bdd-159c-409d-89b7-dd33da9d848b" ><span id="id-f66b5bdd-159c-409d-89b7-dd33da9d848b"><img id="img-id-f66b5bdd-159c-409d-89b7-dd33da9d848b" width="162" height="138"   src="assets/images/robbi.png"/></span>
+</span>
+
+</div>
+
+<aside class="notes">
+
+</aside>
+
+
+
+</section>
+<section id="slide_00016_frag_00001" data-state="slide_00016_frag_00001">
+
+
+<!-- Header -->
+  
+
+<!-- Background -->
+
+
+<!-- Slide -->
+<div class="jb-slide">
+<div class="jb-input jb-render jb-code" style="text-align:center">
+
+<!-- start embedded style -->
+
+<!-- end embedded style -->
+<div class="jb-input-code jb-render">
+<div class="highlight" style="background: #f8f8f8; color:#101010;display=inline-block;"><pre style="line-height: 125%"><span></span>modelBMPInv <span style="color: #666666">=</span> np<span style="color: #666666">.</span>linalg<span style="color: #666666">.</span>solve( Xs<span style="color: #666666">.</span>T<span style="color: #666666">.</span>dot(Xs), Xs<span style="color: #666666">.</span>T<span style="color: #666666">.</span>dot(Ys) )
+</pre></div>
+
+</div><!-- end of jb-input-code jb-render -->
+
+</div>
+
+</div>
+<!-- Footer -->
+
+<div class="jb-footer-left plain">
+    <span id="id-df97b555-6fb6-47ce-a9a1-bf98aefc38fc" ><span id="id-df97b555-6fb6-47ce-a9a1-bf98aefc38fc"><img id="img-id-df97b555-6fb6-47ce-a9a1-bf98aefc38fc"     src="assets/images/logo.png"/></span>
+</span>
+
+</div>
+<div class="jb-footer-right plain">
+    <span id="id-506e0f82-5072-48ec-8a16-ce260f392684" ><span id="id-506e0f82-5072-48ec-8a16-ce260f392684"><img id="img-id-506e0f82-5072-48ec-8a16-ce260f392684" width="162" height="138"   src="assets/images/robbi.png"/></span>
+</span>
+
+</div>
+
+<aside class="notes">
+
+</aside>
+
+
+
+</section>
+<section id="slide_00017_frag_00001" data-state="slide_00017_frag_00001">
+
+
+<!-- Header -->
+  
+
+<!-- Background -->
+
+
+<!-- Slide -->
+<div class="jb-slide">
+<div class="jb-input jb-render jb-code" style="text-align:center">
+
+<!-- start embedded style -->
+
+<!-- end embedded style -->
+<div class="jb-input-code jb-render">
+<div class="highlight" style="background: #f8f8f8; color:#101010;display=inline-block;"><pre style="line-height: 125%"><span></span>fig <span style="color: #666666">=</span> plt<span style="color: #666666">.</span>figure()
+ax <span style="color: #666666">=</span> fig<span style="color: #666666">.</span>add_subplot(<span style="color: #666666">1</span>,<span style="color: #666666">1</span>,<span style="color: #666666">1</span>)
+
+ax<span style="color: #666666">.</span>plot( xm, yModel, linewidth<span style="color: #666666">=2</span>, color<span style="color: #666666">=</span><span style="color: #BA2121">&quot;red&quot;</span>, label<span style="color: #666666">=</span><span style="color: #BA2121">&quot;Model&quot;</span> )
+ax<span style="color: #666666">.</span>plot( Xs[:,<span style="color: #666666">1</span>], Ys, <span style="color: #BA2121">&#39;*&#39;</span>, linewidth<span style="color: #666666">=2</span>, color<span style="color: #666666">=</span><span style="color: #BA2121">&quot;blue&quot;</span>, label<span style="color: #666666">=</span><span style="color: #BA2121">&quot;Sampled data&quot;</span>)
+
+yd <span style="color: #666666">=</span> xModel<span style="color: #666666">.</span>dot( modelBMPInv )
+ax<span style="color: #666666">.</span>plot( xm, yd, linewidth<span style="color: #666666">=2</span>, color<span style="color: #666666">=</span><span style="color: #BA2121">&quot;green&quot;</span>, label<span style="color: #666666">=</span><span style="color: #BA2121">&quot;Model first </span><span style="color: #BB6688; font-weight: bold">{0}</span><span style="color: #BA2121"> points&quot;</span><span style="color: #666666">.</span>format(NModel) )
+m_s <span style="color: #666666">=</span> model_to_string( model )
+err <span style="color: #666666">=</span> <span style="color: #008000">sum</span>( (Xs<span style="color: #666666">.</span>dot(modelBMPInv) <span style="color: #666666">-</span> Ys) <span style="color: #666666">**</span> <span style="color: #666666">2</span> ) 
+ax<span style="color: #666666">.</span>set_title( <span style="color: #BA2121">f&quot;Model found: </span><span style="color: #BB6688; font-weight: bold">{</span>m_s<span style="color: #BB6688; font-weight: bold">}</span><span style="color: #BA2121"> Error: </span><span style="color: #BB6688; font-weight: bold">{</span>err<span style="color: #BB6688; font-weight: bold">:</span><span style="color: #BA2121">.2f</span><span style="color: #BB6688; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+lr3 <span style="color: #666666">=</span> addJBFigure(<span style="color: #BA2121">&quot;lr3&quot;</span>, <span style="color: #666666">0</span>, <span style="color: #666666">0</span>, fig )
+plt<span style="color: #666666">.</span>close()
+</pre></div>
+
+</div><!-- end of jb-input-code jb-render -->
+
+</div>
+
+</div>
+<!-- Footer -->
+
+<div class="jb-footer-left plain">
+    <span id="id-4586c86c-9d45-4a5b-9462-e719d21a11f0" ><span id="id-4586c86c-9d45-4a5b-9462-e719d21a11f0"><img id="img-id-4586c86c-9d45-4a5b-9462-e719d21a11f0"     src="assets/images/logo.png"/></span>
+</span>
+
+</div>
+<div class="jb-footer-right plain">
+    <span id="id-0c40d529-c027-451a-8075-83e0934dfcbf" ><span id="id-0c40d529-c027-451a-8075-83e0934dfcbf"><img id="img-id-0c40d529-c027-451a-8075-83e0934dfcbf" width="162" height="138"   src="assets/images/robbi.png"/></span>
+</span>
+
+</div>
+
+<aside class="notes">
+
+</aside>
+
+
+
+</section>
+<section id="slide_00018_frag_00001" data-state="slide_00018_frag_00001">
+
+
+<!-- Header -->
+  
+
+<!-- Background -->
+
+
+<!-- Slide -->
+<div class="jb-slide">
+
+<div class="jb-output-code jb-render">
+
+<!-- start embedded style -->
+
+<!-- end embedded style -->
+<div class="jb-output jb-render">
+
+<h1>Least Squared Error Approximation</h1>
+
+<span id="id-6dcb2150-ccdb-4b0a-9baa-96acaff96b16" ><span id="id-6dcb2150-ccdb-4b0a-9baa-96acaff96b16"><img id="img-id-6dcb2150-ccdb-4b0a-9baa-96acaff96b16"     src="assets/images/lr3.svg"/></span>
+</span>
+
+<div class="jb-text">
+<p>Note that the solution found using the Normal equation is the optimal solution, i.e., the 
+solution that minimizes the sum of the squared errors.</p>
+</div>
+</div><!-- end of jb-output jb-render -->
+</div><!-- end of jb-output-code jb-render -->
+
+
+</div>
+<!-- Footer -->
+
+<div class="jb-footer-left plain">
+    <span id="id-81c4bad8-c785-4f17-9cdd-1078d6d560cd" ><span id="id-81c4bad8-c785-4f17-9cdd-1078d6d560cd"><img id="img-id-81c4bad8-c785-4f17-9cdd-1078d6d560cd"     src="assets/images/logo.png"/></span>
+</span>
+
+</div>
+<div class="jb-footer-right plain">
+    <span id="id-33b55f1f-3745-4f9b-91af-b56aee0aba30" ><span id="id-33b55f1f-3745-4f9b-91af-b56aee0aba30"><img id="img-id-33b55f1f-3745-4f9b-91af-b56aee0aba30" width="162" height="138"   src="assets/images/robbi.png"/></span>
+</span>
+
+</div>
+
+<aside class="notes">
+
+</aside>
+
+
+
+</section>
+<section id="slide_00019_frag_00001" data-state="slide_00019_frag_00001">
+
+
+<!-- Header -->
+  
+
+<!-- Background -->
+
+
+<!-- Slide -->
+<div class="jb-slide">
+
+<div class="jb-output-code jb-render">
+
+<!-- start embedded style -->
+
+<!-- end embedded style -->
+<div class="jb-output jb-render">
+
+<h1>Another Example</h1>
+
+<div class="jb-text">
+<p>Model: \( y = w_1 + w_2 * x + w_3 * x^2 \) (Parabola)</p>
+<table>
+<tr>
+<td>X</td>
+<td>Y</td>
+</tr>
+<tr>
+<td style="font-size:0.75em">
+<code>
+<pre>
+[[ 1.00000000e+00 -4.87387023e+00  2.37546111e+01]
+ [ 1.00000000e+00 -4.06878947e+00  1.65550477e+01]
+ [ 1.00000000e+00 -3.08140895e+00  9.49508114e+00]
+ [ 1.00000000e+00 -2.98084050e+00  8.88541008e+00]
+ [ 1.00000000e+00 -1.14137889e-01  1.30274578e-02]
+ [ 1.00000000e+00 -6.11217292e-02  3.73586578e-03]
+ [ 1.00000000e+00  1.05832973e+00  1.12006181e+00]
+ [ 1.00000000e+00  2.51483272e+00  6.32438360e+00]
+ [ 1.00000000e+00  3.45017552e+00  1.19037111e+01]
+ [ 1.00000000e+00  4.64334480e+00  2.15606510e+01]]
+</pre>
+</code>
+</td>
+<td style="font-size:0.75em">
+<code>
+<pre>
+[12.15773662  7.62397785  3.51714919  6.18707275 -1.05941512 -0.97355602
+ -2.12049185 -2.98771534  2.45153151  7.75748341]
+</pre>
+</code>
+</td>
+</tr>
+</table>
+</div>
+</div><!-- end of jb-output jb-render -->
+</div><!-- end of jb-output-code jb-render -->
+
+
+</div>
+<!-- Footer -->
+
+<div class="jb-footer-left plain">
+    <span id="id-2125fdb7-ef8c-4b0c-a631-536c00d5d6f9" ><span id="id-2125fdb7-ef8c-4b0c-a631-536c00d5d6f9"><img id="img-id-2125fdb7-ef8c-4b0c-a631-536c00d5d6f9"     src="assets/images/logo.png"/></span>
+</span>
+
+</div>
+<div class="jb-footer-right plain">
+    <span id="id-118d55a9-1f17-4d4b-bb9b-ed189dc94010" ><span id="id-118d55a9-1f17-4d4b-bb9b-ed189dc94010"><img id="img-id-118d55a9-1f17-4d4b-bb9b-ed189dc94010" width="162" height="138"   src="assets/images/robbi.png"/></span>
+</span>
+
+</div>
+
+<aside class="notes">
+
+</aside>
+
+
+
+</section>
+<section id="slide_00020_frag_00001" data-state="slide_00020_frag_00001">
+
+
+<!-- Header -->
+  
+
+<!-- Background -->
+
+
+<!-- Slide -->
+<div class="jb-slide">
+
+<div class="jb-output-code jb-render">
+
+<!-- start embedded style -->
+
+<!-- end embedded style -->
+<div class="jb-output jb-render">
+
+<div class="jb-text">
+<code>
+<pre>
+np.linalg.solve(Xs.T.dot(Xs), Xs.T.dot(Ys))
+</pre>
+</code>
+or
+<code>
+<pre>
+np.linalg.leastsq(Xs, Ys)
+</pre>
+</code>
+<p>Model found: <code>[-1.90, -0.51,  0.50]</code></p>
+<p>Error: <code>17.94</code>
+
+</div>
+</div><!-- end of jb-output jb-render -->
+</div><!-- end of jb-output-code jb-render -->
+
+
+</div>
+<!-- Footer -->
+
+<div class="jb-footer-left plain">
+    <span id="id-e7d7f978-f5f7-4900-86ac-f74da9bca9b3" ><span id="id-e7d7f978-f5f7-4900-86ac-f74da9bca9b3"><img id="img-id-e7d7f978-f5f7-4900-86ac-f74da9bca9b3"     src="assets/images/logo.png"/></span>
+</span>
+
+</div>
+<div class="jb-footer-right plain">
+    <span id="id-46480726-747d-4afd-a94a-014eaca47b95" ><span id="id-46480726-747d-4afd-a94a-014eaca47b95"><img id="img-id-46480726-747d-4afd-a94a-014eaca47b95" width="162" height="138"   src="assets/images/robbi.png"/></span>
+</span>
+
+</div>
+
+<aside class="notes">
+
+</aside>
+
+
+
+</section>
+        </div>
+        </div>
+
+        <script src="js/reveal.js"></script>
+
+        <script>
+            // More info about config & dependencies:
+            // - https://github.com/hakimel/reveal.js#configuration
+            // - https://github.com/hakimel/reveal.js#dependencies
+            Reveal.initialize({
+                math: {
+                    mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+                    config: 'TeX-AMS_HTML-full',  // See http://docs.mathjax.org/en/latest/config-files.html
+                    // tex2jax: {
+                    //     inlineMath: [['$', '$'], ['\(', '\)']],
+                    //     displayMath: [['$$', '$$'], ['\[', '\]']],
+                    //     processEscapes: true,
+                    //     processEnvironments: true,
+                    //     skipTags: ['script', 'noscript', 'style', 'textarea', 'code', 'pre'],
+                    //     displayAlign: 'center',
+                    // }                
+                },
+                dependencies: [
+                    { src: 'plugin/markdown/marked.js' },
+                    { src: 'plugin/markdown/markdown.js' },
+                    { src: 'plugin/notes/notes.js', async: true },
+                    { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                    { src: 'plugin/math/math.js', async: true }
+                ]
+            });
+        </script>
+
+        <script>
+            <!-- Assets -->
+var assets = {
+"robbi" : new JBImage( "robbi", "12677", "162", "138", null, null, "assets/images/robbi", "png" ),
+"logo" : new JBImage( "logo", "12033", "0", "0", null, null, "assets/images/logo", "png" ),
+"fira-logo-1" : new JBImage( "fira-logo-1", "93836", "0", "0", null, null, "assets/images/FIRA-logo-1", "png" ),
+"pairLogo" : new JBImage( "pairLogo", "63051", "0", "0", null, null, "assets/images/pairLogo", "png" ),
+"dp1" : new JBImage( "dp1", "31969", "0", "0", null, null, "assets/images/dp1", "svg" ),
+"lr1" : new JBImage( "lr1", "24092", "0", "0", null, null, "assets/images/lr1", "svg" ),
+"lr2" : new JBImage( "lr2", "22432", "0", "0", null, null, "assets/images/lr2", "svg" ),
+"lr3" : new JBImage( "lr3", "33455", "0", "0", null, null, "assets/images/lr3", "svg" ) 
+};
+var assetInstances = {
+    "id-c0493410-cae1-4cee-ac63-4971fd2dd5df": assets["robbi"],
+    "id-a62ee3ad-0c54-4d4e-83d7-9254bb4c4431": assets["robbi"],
+    "id-7bbdc51a-67b5-4cba-bc30-dcc2c0b03455": assets["robbi"],
+    "id-a4b3a6a8-6843-4b58-aa46-eb2cfc33bc50": assets["robbi"],
+    "id-878ea31d-5f0f-4956-aa4a-a14540b0caa1": assets["robbi"],
+    "id-a5b426b6-5006-46e3-ab51-578b0aa0f15e": assets["robbi"],
+    "id-af7d0267-f0ac-4a26-8f55-a645782330f2": assets["robbi"],
+    "id-23fd7990-93d0-4360-9b5a-ac640126fc0d": assets["robbi"],
+    "id-91fba596-05f1-454c-a3d9-fad714d1ddb6": assets["robbi"],
+    "id-87abbda4-fb05-4e75-88d3-045c84fbd5a2": assets["robbi"],
+    "id-077c08c8-436e-4002-9cae-c3005aa6d993": assets["robbi"],
+    "id-98ea0170-1ecc-4efa-a8ac-7b5bf99291a0": assets["robbi"],
+    "id-bb0c6783-1096-4bf9-a0b4-135cf240cb58": assets["robbi"],
+    "id-f66b5bdd-159c-409d-89b7-dd33da9d848b": assets["robbi"],
+    "id-506e0f82-5072-48ec-8a16-ce260f392684": assets["robbi"],
+    "id-0c40d529-c027-451a-8075-83e0934dfcbf": assets["robbi"],
+    "id-33b55f1f-3745-4f9b-91af-b56aee0aba30": assets["robbi"],
+    "id-118d55a9-1f17-4d4b-bb9b-ed189dc94010": assets["robbi"],
+    "id-46480726-747d-4afd-a94a-014eaca47b95": assets["robbi"],
+    "id-f3ef88cd-e37a-4287-8df0-3be487c00b7d": assets["logo"],
+    "id-3c1a42a3-11c3-464a-9350-fda0b62a9a55": assets["logo"],
+    "id-0f83b41b-9d95-4496-8d98-ded4983d9383": assets["logo"],
+    "id-96747668-1781-401d-8660-0fd7aa2472ad": assets["logo"],
+    "id-6c726b20-cd8a-434e-a378-1f5f11f44871": assets["logo"],
+    "id-7ef77380-161a-4998-a666-e76f0fbcdfab": assets["logo"],
+    "id-7cf9123d-a68a-4006-bfca-45a75cfeecd7": assets["logo"],
+    "id-daad5fe5-2d7c-4f68-9701-c8f78e877f35": assets["logo"],
+    "id-8c9b9e92-2712-43ae-b541-1dacb66f9fbf": assets["logo"],
+    "id-5939321f-9d8c-45ad-8d29-8477e56610bb": assets["logo"],
+    "id-099f46bd-fba4-46f5-8382-75fc10cef9e3": assets["logo"],
+    "id-546ba9c3-cc4a-4c0b-9c0c-9e4899017798": assets["logo"],
+    "id-a5987db9-a315-4241-b62d-1964bc82d5a2": assets["logo"],
+    "id-0589efc0-abb5-40a0-87a6-76f869fb16b3": assets["logo"],
+    "id-df97b555-6fb6-47ce-a9a1-bf98aefc38fc": assets["logo"],
+    "id-4586c86c-9d45-4a5b-9462-e719d21a11f0": assets["logo"],
+    "id-81c4bad8-c785-4f17-9cdd-1078d6d560cd": assets["logo"],
+    "id-2125fdb7-ef8c-4b0c-a631-536c00d5d6f9": assets["logo"],
+    "id-e7d7f978-f5f7-4900-86ac-f74da9bca9b3": assets["logo"],
+    "id-2a6c6afd-e5bf-4f5d-a23f-88160afeb797": assets["dp1"],
+    "id-38a49033-90fd-49fc-93fe-d0804716dba9": assets["lr1"],
+    "id-724d2c13-8e8d-4cd7-9b4b-07d20b5ef91a": assets["lr2"],
+    "id-6dcb2150-ccdb-4b0a-9baa-96acaff96b16": assets["lr3"]
+};
+<!-- End of Assets -->
+
+            convertURLs(assetInstances, "smart-path");
+        </script>
+        <script>
+            <!-- Characters -->
+var characters =
+{};
+<!-- End of Characters -->
+
+        </script>
+    </body>
+</html>
